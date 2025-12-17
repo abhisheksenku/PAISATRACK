@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Permissions-Policy"
+      content="payment *, accelerometer *, camera *, microphone *"
+    />
+    <title>PaisaTrack — Dashboard</title>
+    <link rel="stylesheet" href="/css/expense.css" />
+  </head>
+  <body>
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="logo">PT</div>
+        <div>
+          <h1 style="font-size: 15px; margin: 0">PaisaTrack</h1>
+          <div style="font-size: 12px; color: var(--muted)">Dashboard</div>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#" data-target="dashboard" class="active">Dashboard</a>
+        <a href="#" data-target="expenses">Expenses</a>
+        <a href="#" data-target="features">Features</a>
+        <a href="#" data-target="reports">Reports</a>
+        <a href="#" data-target="analytics">Analytics</a>
+        <a href="#" data-target="settings">Settings</a>
+      </nav>
+    </aside>
+
+    <div class="overlay" id="overlay" hidden></div>
+
+    <main class="main" id="main">
+      <header class="topbar">
+        <div class="top-left">
+          <button
+            class="hamburger"
+            id="hamburger"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+          >
+            <span></span><span></span><span></span>
+          </button>
+
+          <nav id="breadcrumbs" class="breadcrumbs" aria-label="breadcrumb">
+            <span>Dashboard</span>
+          </nav>
+        </div>
+
+        <div style="display: flex; gap: 12px; align-items: center">
+          <div class="muted" id="dateTime">—</div>
+          <button class="btn logout" id="logoutBtn">Logout</button>
+        </div>
+      </header>
+
+      <section class="page-content" id="dashboard" hidden>
+        <div class="welcome" style="margin-bottom: 16px">
+          <div class="avatar" id="avatar">J</div>
+          <div>
+            <h2 id="username" style="margin: 0; font-size: 1.25rem">
+              Welcome back, John Doe
+            </h2>
+            <p id="subText" class="small" style="margin: 0">
+              Here's what's happening today.
+            </p>
+          </div>
+        </div>
+
+        <div id="dashboard-summary" class="dashboard-summary-grid">
+          <div class="summary-card">
+            <p class="summary-card-title">Total Expenses</p>
+            <p id="summary-total-expenses" class="summary-card-value">$0.00</p>
+          </div>
+
+          <div class="summary-card">
+            <p class="summary-card-title">Remaining Budget</p>
+            <p id="summary-remaining-budget" class="summary-card-value">
+              $0.00
+            </p>
+          </div>
+
+          <div class="summary-card">
+            <p class="summary-card-title">Total Transactions</p>
+            <p id="summary-total-transactions" class="summary-card-value">0</p>
+          </div>
+
+          <div class="summary-card">
+            <p class="summary-card-title">Top Category</p>
+            <p id="summary-top-category" class="summary-card-value">—</p>
+          </div>
+        </div>
+
+        <div
+          class="add-expense-card"
+          role="region"
+          aria-labelledby="addExpenseTitle"
+        >
+          <h2 id="addExpenseTitle" class="card-title">Add New Expense</h2>
+          <form id="expense-form" class="expense-form-grid" novalidate>
+            <!-- Amount -->
+            <div class="form-group">
+              <label class="form-label" for="amount">Amount (₹)</label>
+              <input
+                type="number"
+                id="amount"
+                step="0.01"
+                required
+                class="form-input"
+                placeholder="0.00"
+                min="0"
+              />
+            </div>
+
+            <!-- Description -->
+            <div class="form-group">
+              <label class="form-label" for="description">Description</label>
+              <input
+                type="text"
+                id="description"
+                required
+                class="form-input"
+                placeholder="e.g., Salary, Food, Amazon"
+              />
+            </div>
+
+            <!-- Category -->
+            <div class="form-group">
+              <label class="form-label" for="category">Category</label>
+              <select id="category" class="form-select">
+                <option value="Food">Food</option>
+                <option value="Transport">Transport</option>
+                <option value="Bills">Bills</option>
+                <option value="Shopping">Shopping</option>
+                <option value="Salary">Salary</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <!-- TYPE TOGGLE -->
+            <div class="form-group">
+              <label class="form-label">Type</label>
+              <div class="toggle-group" id="typeToggle">
+                <button
+                  type="button"
+                  class="toggle-btn active"
+                  data-type="expense"
+                >
+                  Expense
+                </button>
+                <button type="button" class="toggle-btn" data-type="income">
+                  Income
+                </button>
+              </div>
+              <input type="hidden" id="type" value="expense" />
+            </div>
+
+            <!-- Date -->
+            <div class="form-group">
+              <label class="form-label" for="date">Date</label>
+              <input type="date" id="date" required class="form-input" />
+            </div>
+
+            <!-- Note -->
+            <div class="form-group" style="grid-column: span 4">
+              <label class="form-label" for="note">Note (optional)</label>
+              <textarea
+                id="note"
+                class="form-input"
+                rows="2"
+                placeholder="Add a note..."
+              ></textarea>
+            </div>
+
+            <!-- Submit -->
+            <div class="form-submit" style="grid-column: span 4">
+              <button type="submit" class="btn-primary">Add Entry</button>
+            </div>
+          </form>
+        </div>
+
+        <div
+          class="recent-expenses-card"
+          role="region"
+          aria-labelledby="recentTitle"
+        >
+          <h2 id="recentTitle" class="card-title">Recent Expenses</h2>
+
+          <div
+            id="recent-expenses-list"
+            class="recent-expenses-list"
+            aria-live="polite"
+          ></div>
+
+          <div class="load-more-container">
+            <button onclick="openFullExpenses()" class="load-more-btn">
+              Load More →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-content" id="expenses" hidden>
+        <h2>All Expenses</h2>
+
+        <div class="table-container">
+          <table class="full-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAllExpenses" /></th>
+                <th>Date</th>
+                <th>Description</th>
+                <th>Category</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Note</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="expenses-body"></tbody>
+          </table>
+        </div>
+
+        <div id="expenses-pagination" class="pagination"></div>
+        <div class="bulk-delete-container">
+          <button id="bulkDeleteBtn" class="btn danger">Delete Selected</button>
+        </div>
+
+        <!-- EDIT MODAL -->
+        <div id="editModal" class="modal-overlay">
+          <div class="modal-card">
+            <h3>Edit Expense</h3>
+
+            <form id="editForm">
+              <input type="hidden" id="editId" />
+
+              <div class="form-group">
+                <label>Amount</label>
+                <input
+                  type="number"
+                  id="editAmount"
+                  class="form-input"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Description</label>
+                <input
+                  type="text"
+                  id="editDescription"
+                  class="form-input"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Category</label>
+                <input
+                  type="text"
+                  id="editCategory"
+                  class="form-input"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label>Type</label>
+                <select id="editType" class="form-input">
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label>Date</label>
+                <input type="date" id="editDate" class="form-input" required />
+              </div>
+
+              <div class="form-group">
+                <label>Note</label>
+                <textarea id="editNote" class="form-input"></textarea>
+              </div>
+
+              <div class="modal-actions">
+                <button type="button" id="cancelEdit" class="btn secondary">
+                  Cancel
+                </button>
+                <button type="submit" class="btn-primary">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-content" id="reports" hidden>
+        <h2>Financial Reports</h2>
+        <p class="text-muted" id="reportsLocked">
+          Become a premium user to access reports.
+        </p>
+
+        <!-- This section will be shown only for premium users -->
+        <div id="reportsContent" hidden>
+          <div class="filters">
+            <label for="monthFilter">Month:</label>
+            <select id="monthFilter">
+              <option value="">All</option>
+            </select>
+
+            <label for="yearFilter">Year:</label>
+            <select id="yearFilter">
+              <option value="">All</option>
+            </select>
+
+            <label for="startDate">Start:</label>
+            <input type="date" id="startDate" />
+
+            <label for="endDate">End:</label>
+            <input type="date" id="endDate" />
+
+            <!-- NEW CATEGORY FILTER -->
+            <label for="categoryFilter">Category:</label>
+            <select id="categoryFilter">
+              <option value="">All</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Bills">Bills</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Salary">Salary</option>
+              <option value="Other">Other</option>
+            </select>
+
+            <!-- NEW TYPE FILTER -->
+            <label for="typeFilter">Type:</label>
+            <select id="typeFilter">
+              <option value="">All</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+
+            <button id="applyFilters" class="btn-primary">Apply Filters</button>
+          </div>
+
+          <div class="actions">
+            <button id="downloadBtn" disabled class="btn secondary">
+              Download Report
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table id="expense-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Category</th>
+                  <th>Income</th>
+                  <th>Expense</th>
+                  <th>Note</th>
+                </tr>
+              </thead>
+
+              <tbody id="expense-body"></tbody>
+
+              <tfoot>
+                <tr>
+                  <td colspan="3"><strong>Total</strong></td>
+                  <td>
+                    <strong>₹<span id="incomeTotal">0</span></strong>
+                  </td>
+                  <td>
+                    <strong>₹<span id="expenseTotal">0</span></strong>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="5" style="text-align: right">
+                    <strong>Savings: ₹<span id="savingsTotal">0</span></strong>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+
+          <div class="pagination-container">
+            <div id="reportPagination"></div>
+
+            <label for="itemsPerPage">Items per page:</label>
+            <select id="itemsPerPage">
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="40">40</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="page-content" id="features" hidden>
+        <h2>Premium Features</h2>
+        <p class="text-muted">
+          Unlock advanced features to enhance your experience.
+        </p>
+
+        <!-- PREMIUM UPGRADE AREA -->
+        <div id="premium-upgrade-section" style="margin: 16px 0">
+          <button id="buyPremiumBtn" class="btn-primary">
+            Become Premium User
+          </button>
+        </div>
+
+        <!-- PREMIUM BUTTONS (Leaderboard & Reports) -->
+        <div id="premium-controls" style="margin-bottom: 12px">
+          <button
+            id="leaderboardBtn"
+            class="btn secondary"
+            style="display: none"
+          >
+            Leaderboard
+          </button>
+          <button
+            id="openReportsBtn"
+            class="btn secondary"
+            style="display: none"
+          >
+            Reports
+          </button>
+        </div>
+
+        <!-- LEADERBOARD SECTION (premium-only) -->
+        <div id="leaderboard-section" hidden>
+          <h3>Leaderboard</h3>
+          <ul id="leaderboard-list" class="small-list"></ul>
+          <div id="leaderboard-pagination" style="margin-top: 10px"></div>
+        </div>
+      </section>
+      <section class="page-content" id="analytics" hidden>
+        <h2>Analytics</h2>
+
+        <div class="analytics-controls">
+          <label>Select Month:</label>
+          <select id="analyticsMonth"></select>
+        </div>
+
+        <div class="analytics-chart-wrapper">
+          <canvas id="analyticsChart"></canvas>
+        </div>
+
+        <div id="analyticsSummary" class="summary-grid"></div>
+      </section>
+
+      <section class="page-content" id="settings" hidden>
+        <div class="card settings-card">
+          <h2 class="card-title">Account Details</h2>
+          <p class="text-muted">Update your name and phone number.</p>
+
+          <form id="update-details-form" class="details-form-grid">
+            <div class="form-group">
+              <label class="form-label" for="detailEmail"
+                >Email (Read-only)</label
+              >
+              <div id="detailEmail" class="form-display">john@example.com</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="detailName">Name</label>
+              <input type="text" id="detailName" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="detailPhone">Phone</label>
+              <input type="tel" id="detailPhone" class="form-input" />
+            </div>
+
+            <div
+              class="form-submit"
+              style="grid-column: 1 / -1; margin-top: 15px"
+            >
+              <button type="submit" class="btn-primary">Save Details</button>
+            </div>
+          </form>
+        </div>
+        <div class="card settings-card">
+          <label>Monthly Budget Alert Threshold (₹)</label>
+          <input type="number" id="thresholdInput" placeholder="Enter amount" />
+
+          <button type="button" id="saveThresholdBtn" class="btn">
+            Save Threshold
+          </button>
+        </div>
+
+        <div class="card settings-card">
+          <h2 class="card-title">Update Password</h2>
+          <p class="text-muted">Ensure your new password is secure.</p>
+
+          <form id="update-password-form" class="password-form-grid">
+            <div class="form-group">
+              <label class="form-label" for="currentPassword"
+                >Current Password</label
+              >
+              <input
+                type="password"
+                id="currentPassword"
+                class="form-input"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="newPassword">New Password</label>
+              <input
+                type="password"
+                id="newPassword"
+                class="form-input"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="confirmNewPassword"
+                >Confirm New Password</label
+              >
+              <input
+                type="password"
+                id="confirmNewPassword"
+                class="form-input"
+                required
+              />
+            </div>
+
+            <div
+              class="form-submit"
+              style="grid-column: 1 / -1; margin-top: 15px"
+            >
+              <button type="submit" class="btn-primary">Update Password</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card settings-card danger-zone">
+          <h2 class="card-title">Danger Zone</h2>
+          <p class="text-muted">
+            Deleting your account is permanent and cannot be undone.
+          </p>
+          <button id="showDeleteModalBtn" class="btn danger">
+            Delete My Account
+          </button>
+        </div>
+      </section>
+    </main>
+
+    <div id="deleteAccountModal" class="modal-overlay">
+      <div class="modal-card">
+        <h3>Delete Your Account?</h3>
+        <p class="text-muted">
+          This action is irreversible. To confirm, please enter your password.
+        </p>
+        <form id="deleteAccountForm">
+          <div class="form-group">
+            <label class="form-label" for="deletePassword">Password</label>
+            <input
+              type="password"
+              id="deletePassword"
+              class="form-input"
+              required
+            />
+          </div>
+          <div class="modal-actions">
+            <button type="button" id="cancelDeleteBtn" class="btn secondary">
+              Cancel
+            </button>
+            <button type="submit" id="confirmDeleteBtn" class="btn danger">
+              Delete Account
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="confirmationModal" class="modal-overlay">
+      <div class="modal-card">
+        <p id="confirmMessage"></p>
+
+        <div class="modal-actions">
+          <button class="btn danger" id="confirmBtn">Yes</button>
+          <button class="btn secondary" id="cancelBtn">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="notificationToast" class="toast">
+      <span id="notificationMessage"></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/config.js"></script>
+    <script src="/js/notification.js"></script>
+    <script src="/js/expense.js"></script>
+  </body>
+</html>

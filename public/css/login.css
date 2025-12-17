@@ -1,0 +1,247 @@
+:root {
+  --primary: #4f46e5;            /* from --primary-color / indigo-600 */
+  --primary-light: #6366f1;      /* already matches version2 */
+  --primary-dark: #4338ca;       /* use indigo-700 */
+  --secondary: #6b7280;          /* closest = gray-500 (text-muted) */
+  --secondary-hover: #374151;    /* gray-700 */
+  --background: #f9fafb;         /* bg-body / gray-50 */
+  --surface: #ffffff;            /* keep white (no direct alt) */
+  --text-color: #1f2937;         /* text-default */
+  --muted: #6b7280;              /* text-muted / gray-500 */
+  --border-color: #f3f4f6;       /* gray-100 */
+  --success: #198754;            /* no mapping → kept original */
+  --danger: #dc2626;             /* from red-600 */
+  --warning: #ffc107;            /* no mapping → kept original */
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1),
+            0 2px 4px -2px rgba(0,0,0,0.1);   /* version2 shadow-md */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);  /* kept (no alt) */
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1),
+               0 2px 4px -2px rgba(0,0,0,0.1); /* version2 shadow-md */
+
+  --sidebar-width: 80px;
+  --icon-size: 26px;
+
+  --tran-02: all 0.2s ease-in-out;
+  --tran-03: all 0.3s ease-in-out;
+  --tran-04: all 0.4s ease-in-out;
+  --tran-05: all 0.5s ease-in-out;
+}
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+/* body {
+  background-color: var(--background);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+} */
+ body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, var(--secondary), var(--primary), var(--primary-dark), var(--primary-light), var(--secondary-hover));
+  background-size: 1400% 1400%;
+  animation: rainbow 20s ease infinite;
+}
+
+@keyframes rainbow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* Main container */
+.main-container {
+  display: flex;
+  max-width: 800px;
+  width: 90%;
+  background-color: var(--surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+/* Left panel */
+.left-panel {
+  flex: 1;
+  /* background-color: var(--primary-light); */
+  color: var(--primary-dark);
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.left-panel h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.left-panel p {
+  font-size: 16px;
+  color: var(--muted);
+}
+
+/* Form container */
+.form-container {
+  flex: 1;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--surface);
+}
+
+/* Input groups */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px 10px;
+  font-size: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  outline: none;
+  transition: var(--tran-02);
+}
+
+.input-group input:focus {
+  border-color: var(--primary-dark);
+  box-shadow: 0 0 5px var(--primary-light);
+}
+
+.input-group label {
+  position: absolute;
+  top: -8px;
+  left: 12px;
+  background: var(--surface);
+  padding: 0 4px;
+  font-size: 14px;
+  color: var(--primary-dark);
+}
+
+/* Forgot password */
+.forgot-password {
+  text-align: right;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.forgot-password a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--tran-02);
+}
+
+.forgot-password a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Submit button */
+button[type="submit"] {
+  padding: 12px;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: var(--surface);
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--tran-03);
+}
+
+button[type="submit"]:hover {
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+}
+
+/* button[type="submit"]:focus {
+  outline: 2px solid var(--primary-dark);
+  outline-offset: 2px;
+} */
+
+/* Sign up link */
+.text-center {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.text-center a {
+  color: var(--primary);
+  text-decoration: none;
+  transition: var(--tran-02);
+}
+
+.text-center a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .left-panel {
+    text-align: center;
+    padding: 30px 20px;
+  }
+
+  .form-container {
+    padding: 30px 20px;
+  }
+}
+/* ======================================= */
+/* ==   Notification Toast Styles       == */
+/* ======================================= */
+
+.toast {
+  position: fixed; /* Floats over content */
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -150%); /* Starts hidden above the screen */
+  padding: 16px 24px;
+  border-radius: 0 0 8px 8px; /* Rounded bottom corners */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  font-weight: 600;
+  z-index: 9999;
+  transition: transform 0.4s ease-in-out;
+  min-width: 300px;
+  text-align: center;
+  /* Default to hidden */
+  visibility: hidden;
+}
+
+/* This class makes the toast slide into view */
+.toast.show {
+  transform: translate(-50%, 0); /* Slides it down */
+  visibility: visible;
+}
+
+/* Green style for success */
+.toast.success {
+  background-color: #ff6b81; 
+  color: white;
+}
+
+/* Red style for errors */
+.toast.error {
+  background-color: #6c5ce7;
+  color: white;
+}
